@@ -55,7 +55,7 @@ string Shader::load_shader(const string &fileName)
         ss << file.rdbuf();
 
     } catch(ifstream::failure &e) {
-        cerr << "Failed to load shader:" << endl << e.what() << ", " << e.code() << endl;
+        cerr << "Failed to load shader '" << fileName << "':" << endl << e.what() << ", " << e.code() << endl;
     }
     return ss.str();
 }

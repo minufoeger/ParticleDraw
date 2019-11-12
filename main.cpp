@@ -10,12 +10,13 @@
 
 using namespace std;
 
-vector<glm::vec3 *> g_inst_positions;
 glm::vec3 g_array[ARRAY_SIZE*ARRAY_SIZE] = { glm::vec3(0.0f) };
 mutex g_posMutex;
 
 int main()
 {
+    vector<glm::vec3 *> g_inst_positions;
+
     //create array and construct vector from it
     for(int i=0; i<ARRAY_SIZE; ++i) {
         for(int j=0; j<ARRAY_SIZE; ++j) {
