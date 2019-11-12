@@ -22,7 +22,7 @@ int main()
         for(int j=0; j<ARRAY_SIZE; ++j) {
             float x = (float)(-ARRAY_SIZE/2+j);
             float y = (float)(-ARRAY_SIZE/2+i);
-            g_array[i*ARRAY_SIZE+j] = glm::vec3(x/2, y/2, 0.0f);
+            g_array[i*ARRAY_SIZE+j] = glm::vec3(x, y, 0.0f);
         }
     }
     for(int i=0; i<sizeof(g_array)/sizeof(g_array[0]); i++)

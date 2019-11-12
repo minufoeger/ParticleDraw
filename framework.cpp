@@ -46,7 +46,7 @@ Framework::Framework(unsigned width, unsigned height, const string &title,
     m_display = new Display(width, height, title);
 
     //create view and projection matrix (camera)
-    glm::vec3 forward   = -glm::normalize(cam_pos);
+    glm::vec3 forward   = -glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f));
     m_camera = new Camera(cam_pos, forward, glm::vec3(0.0f, 1.0f, 0.0f), //pos, forward, up
                           PI/4.0f, ((float)width)/((float)height), //fov, aspect ratio
                           0.3f, 100.0f); //zNear, zFar
@@ -65,7 +65,7 @@ Framework::Framework(unsigned width, unsigned height, const string &title,
     m_cubes = new InstancedMesh(vertices, indices, inst_positions);
 
     //cube transform:
-    m_trans_cube = new Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.1f, 0.1f, 0.1f));
+    m_trans_cube = new Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 
     //cube shader:
     m_shader_cube = new Shader(vert_path, frag_path);
