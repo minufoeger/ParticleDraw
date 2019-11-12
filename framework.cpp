@@ -37,7 +37,9 @@ static void printvector(const string &name, glm::vec3 vec)
 static float pitch = 0.0f, yaw = 0.0f;
 
 
-Framework::Framework(unsigned width, unsigned height, const string &title, vector<glm::vec3*> *inst_positions)
+Framework::Framework(unsigned width, unsigned height, const string &title,
+                     const std::string &vert_path, const std::string &frag_path,
+                     vector<glm::vec3*> *inst_positions)
 {
     //initialize the display (window, GLFW, ...)
     m_display = new Display(width, height, title);
@@ -66,7 +68,7 @@ Framework::Framework(unsigned width, unsigned height, const string &title, vecto
     m_trans_cube = new Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.1f, 0.1f, 0.1f));
 
     //cube shader:
-    m_shader_cube = new Shader("../res/instanced_shader.vert", "../res/instanced_shader.frag");
+    m_shader_cube = new Shader(vert_path, frag_path);
     m_shader_cube->setUniform4Matrix4fv("view_mat", m_camera->getView());
     m_shader_cube->setUniform4Matrix4fv("proj_mat", m_camera->getProjection());
     m_shader_cube->setUniform4Matrix4fv("model_mat", m_trans_cube->getModel());
@@ -117,7 +119,6 @@ bool Framework::getIsRunning()
 
 void Framework::updateInstPos()
 {
-    cout << "updating" << endl;
     if(!this->getIsRunning())
         return;
 
