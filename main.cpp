@@ -30,7 +30,9 @@ int main()
 
 
     //init a Framework and start it's main loop (new thread)
-    Framework fr(800, 600, "ParticleDraw", &g_inst_positions);
+    Framework fr(800, 600, "ParticleDraw",
+                 "../res/instanced_shader.vert", "../res/instanced_shader.frag",
+                 &g_inst_positions);
     fr.start_main_loop();
 
     //do for ~10s
