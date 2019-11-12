@@ -20,8 +20,7 @@ target_include_directories(ParticleDraw
 )
 
 # target libraries
-target_link_libraries(
-        ParticleDraw
+target_link_libraries(ParticleDraw
         glfw
         ${OPENGL_LIBRARIES}
         ${GLEW_LIBRARIES}

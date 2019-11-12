@@ -37,7 +37,7 @@ static void printvector(const string &name, glm::vec3 vec)
 static float pitch = 0.0f, yaw = 0.0f;
 
 
-Framework::Framework(unsigned width, unsigned height, const string &title, vector<glm::vec3> *inst_positions)
+Framework::Framework(unsigned width, unsigned height, const string &title, vector<glm::vec3*> *inst_positions)
 {
     //initialize the display (window, GLFW, ...)
     m_display = new Display(width, height, title);
@@ -79,10 +79,6 @@ Framework::Framework(unsigned width, unsigned height, const string &title, vecto
     m_running = true;
 }
 
-Framework::Framework(const Framework &fr)
-{
-    cout << "copying!" << endl;
-}
 
 Framework::~Framework()
 {

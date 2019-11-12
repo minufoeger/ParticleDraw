@@ -55,7 +55,7 @@ void Mesh::draw(Shader *shader)
 
 
 
-InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::vec3> *inst_positions)
+InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::vec3*> *inst_positions)
     : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), s_inst_positions(inst_positions)
 {
     m_num_pos = s_inst_positions->size();
@@ -63,11 +63,18 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     //bind vertexArrayObject
     glBindVertexArray(m_VAO);
 
-    //generate VBO and fill with instance data
+    //generate and bind VBO for instanced data
     glGenBuffers(1, &m_inst_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_inst_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_positions->size(),
-                 s_inst_positions->data(), GL_STATIC_DRAW);
+    //reserve space on GPU memory
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_positions->size(), nullptr, GL_STATIC_DRAW);
+    //map buffer, copy everything into it and make sure to unmap after we're done
+    glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    for(int i=0; i<s_inst_positions->size(); i++) {
+        *buf_ptr = *(*s_inst_positions)[i];
+        buf_ptr++;
+    }
+    glUnmapBuffer(GL_ARRAY_BUFFER);
 
     //bind attribArray 2 to instance positions
     glEnableVertexAttribArray(2);
@@ -92,8 +99,15 @@ void InstancedMesh::updateInstPos()
 
     //generate VBO and fill with instance data
     glBindBuffer(GL_ARRAY_BUFFER, m_inst_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_positions->size(),
-                 s_inst_positions->data(), GL_STATIC_DRAW);
+
+    //map buffer, copy everything into it and make sure to unmap after we're done
+    glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    for(int i=0; i<s_inst_positions->size(); i++) {
+        *buf_ptr = *(*s_inst_positions)[i];
+        buf_ptr++;
+    }
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+
 
     //bind attribArray 2 to instance positions
     glEnableVertexAttribArray(2);

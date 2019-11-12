@@ -22,19 +22,13 @@ class Framework
 {
 public:
     Framework(unsigned width, unsigned height, const string &title,
-              vector<glm::vec3> *inst_positions);
-
+              vector<glm::vec3*> *inst_positions);
     ~Framework();
-
-    Framework(const Framework &fr);
 
 
     void start_main_loop();
-
     void join();
-
     void updateInstPos();
-
     bool getIsRunning();
 
 private:
