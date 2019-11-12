@@ -32,6 +32,7 @@ int main()
     //init a Framework and start it's main loop (new thread)
     Framework fr(800, 600, "ParticleDraw",
                  "../res/instanced_shader.vert", "../res/instanced_shader.frag",
+                 glm::vec3(0.0f, 0.0f, 5.0f),
                  &g_inst_positions);
     fr.start_main_loop();
 

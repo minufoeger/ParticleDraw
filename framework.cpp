@@ -39,15 +39,15 @@ static float pitch = 0.0f, yaw = 0.0f;
 
 Framework::Framework(unsigned width, unsigned height, const string &title,
                      const std::string &vert_path, const std::string &frag_path,
+                     const glm::vec3 &cam_pos,
                      vector<glm::vec3*> *inst_positions)
 {
     //initialize the display (window, GLFW, ...)
     m_display = new Display(width, height, title);
 
     //create view and projection matrix (camera)
-    glm::vec3 camPos    = glm::vec3(0.0f, 0.0f, 5.0f);
-    glm::vec3 forward   = -glm::normalize(camPos);
-    m_camera = new Camera(camPos, forward, glm::vec3(0.0f, 1.0f, 0.0f), //pos, forward, up
+    glm::vec3 forward   = -glm::normalize(cam_pos);
+    m_camera = new Camera(cam_pos, forward, glm::vec3(0.0f, 1.0f, 0.0f), //pos, forward, up
                           PI/4.0f, ((float)width)/((float)height), //fov, aspect ratio
                           0.3f, 100.0f); //zNear, zFar
 

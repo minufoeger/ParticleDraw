@@ -23,6 +23,7 @@ class Framework
 public:
     Framework(unsigned width, unsigned height, const string &title,
               const std::string &vert_path, const std::string &frag_path,
+              const glm::vec3 &cam_pos,
               vector<glm::vec3*> *inst_positions);
     ~Framework();
 
