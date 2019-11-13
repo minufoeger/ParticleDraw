@@ -25,6 +25,7 @@ target_include_directories(ParticleDraw
         ${GLEW_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIRS}
 )
+include_directories(${CMAKE_SOURCE_DIR})
 
 # target libraries
 target_link_libraries(ParticleDraw
