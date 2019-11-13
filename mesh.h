@@ -53,7 +53,7 @@ class InstancedMesh : public Mesh
 {
 public:
     InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds,
-                  vector<glm::vec3*> *inst_attr);
+                  vector<glm::dvec3*> *inst_attr);
     ~InstancedMesh() override;
 
     void updateInstPos();
@@ -61,6 +61,6 @@ public:
 
 private:
     GLuint m_inst_VBO;
-    vector<glm::vec3*> *s_inst_attr;
+    vector<glm::dvec3*> *s_inst_attr;
     unsigned m_num_inst;
 };

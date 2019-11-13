@@ -57,7 +57,7 @@ void Mesh::draw(Shader *shader)
 
 
 
-InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::vec3*> *inst_attr)
+InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::dvec3*> *inst_attr)
     : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), s_inst_attr(inst_attr)
 {
     m_num_inst = s_inst_attr->size()/2;
@@ -73,7 +73,7 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     //map buffer, copy everything into it and make sure to unmap after we're done
     glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     for(int i=0; i<s_inst_attr->size(); i++) {
-        *buf_ptr = *(*s_inst_attr)[i];
+        *buf_ptr = *((*s_inst_attr)[i]);
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);

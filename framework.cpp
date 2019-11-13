@@ -33,7 +33,7 @@ static float pitch = 0.0f, yaw = 0.0f;
 Framework::Framework(unsigned width, unsigned height, const string &title,
                      const std::string &vert_path, const std::string &frag_path,
                      const glm::vec3 &cam_pos,
-                     vector<glm::vec3*> *inst_attr)
+                     vector<glm::dvec3*> *inst_attr)
 {
     //initialize the display (window, GLFW, ...)
     m_display = new Display(width, height, title);
