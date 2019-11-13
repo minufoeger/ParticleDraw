@@ -127,7 +127,7 @@ void Framework::updateInstAttribs()
 void Framework::thr_processInput()
 {
     //poll wasd keys and update camera position
-    float cameraSpeed = 0.05f; // adjust accordingly
+    float cameraSpeed = 1.0f; // adjust accordingly
     if(m_display->isKeyPressed(GLFW_KEY_W)) {
         m_camera->setPos(m_camera->getPos() + cameraSpeed * m_camera->getForward());
     }else if (m_display->isKeyPressed(GLFW_KEY_S)) {

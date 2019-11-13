@@ -75,7 +75,7 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     for(int i=0; i<s_inst_attr->size()/2; i+=2) {
         *buf_ptr = *((*s_inst_attr)[2*i]);
         buf_ptr++;
-        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]));
+        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
         *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
         buf_ptr++;
     }
@@ -117,25 +117,11 @@ void InstancedMesh::updateInstAttribs()
     for(int i=0; i<s_inst_attr->size()/2; i++) {
         *buf_ptr = *((*s_inst_attr)[2*i]);
         buf_ptr++;
-        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]));
+        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
         *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);
-
-
-    /*//bind attribArray 2 to instance positions
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-                          (3 + 3) * sizeof(float), (void *) 0);
-    glVertexAttribDivisor(2, 1); // tell OpenGL this is an instanced vertex attribute.
-
-    //bind attribArray 3 to instance velocities
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE,
-                          (3 + 3) * sizeof(float), (void *) (3 * sizeof(float)));
-    glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.*/
-
 
     //unbind VAO first and then the buffers
     glBindVertexArray(0);
