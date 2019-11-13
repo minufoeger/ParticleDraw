@@ -10,7 +10,11 @@ add_library(ParticleDraw STATIC framework.cpp framework.h display.cpp display.h 
 # glew
 find_package(GLEW REQUIRED)
 # opengl
+if(POLICY CMP0072)
+    cmake_policy (SET CMP0072 NEW)
+endif(POLICY CMP0072)
 find_package(OpenGL REQUIRED)
+
 # glfw
 find_package(glfw3 REQUIRED)
 # posix threads

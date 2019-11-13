@@ -28,8 +28,10 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned> indices)
     glVertexAttribPointer(1, COL_ELEMS, GL_FLOAT, GL_FALSE,
                           STRIDE_ELEMS * sizeof(float), (void *) ((POS_ELEMS) * sizeof(float)));
 
-    //debind vertexArrayObject
+    //unbind VAO first and then the buffers
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     //draw all Indices
     m_drawCount = m_indices.size();
@@ -55,10 +57,10 @@ void Mesh::draw(Shader *shader)
 
 
 
-InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::vec3*> *inst_positions)
-    : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), s_inst_positions(inst_positions)
+InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::vec3*> *inst_attr)
+    : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), s_inst_attr(inst_attr)
 {
-    m_num_pos = s_inst_positions->size();
+    m_num_inst = s_inst_attr->size()/2;
 
     //bind vertexArrayObject
     glBindVertexArray(m_VAO);
@@ -67,11 +69,11 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     glGenBuffers(1, &m_inst_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_inst_VBO);
     //reserve space on GPU memory
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_positions->size(), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_attr->size(), nullptr, GL_STATIC_DRAW);
     //map buffer, copy everything into it and make sure to unmap after we're done
     glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_positions->size(); i++) {
-        *buf_ptr = *(*s_inst_positions)[i];
+    for(int i=0; i<s_inst_attr->size(); i++) {
+        *buf_ptr = *(*s_inst_attr)[i];
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -79,12 +81,19 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     //bind attribArray 2 to instance positions
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-                          3 * sizeof(float), (void *) 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                          (3 + 3) * sizeof(float), (void *) 0);
     glVertexAttribDivisor(2, 1); // tell OpenGL this is an instanced vertex attribute.
 
-    //unbind VAO and delete buffer
+    //bind attribArray 3 to instance velocities
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE,
+                          (3 + 3) * sizeof(float), (void *) (3 * sizeof(float)));
+    glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.
+
+
+    //unbind VAO first and then the buffers
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 InstancedMesh::~InstancedMesh()
@@ -102,29 +111,36 @@ void InstancedMesh::updateInstPos()
 
     //map buffer, copy everything into it and make sure to unmap after we're done
     glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_positions->size(); i++) {
-        *buf_ptr = *(*s_inst_positions)[i];
+    for(int i=0; i<s_inst_attr->size(); i++) {
+        *buf_ptr = *(*s_inst_attr)[i];
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
 
-    //bind attribArray 2 to instance positions
+    /*//bind attribArray 2 to instance positions
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-                          3 * sizeof(float), (void *) 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                          (3 + 3) * sizeof(float), (void *) 0);
     glVertexAttribDivisor(2, 1); // tell OpenGL this is an instanced vertex attribute.
 
-    //unbind VAO and delete buffer
+    //bind attribArray 3 to instance velocities
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE,
+                          (3 + 3) * sizeof(float), (void *) (3 * sizeof(float)));
+    glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.*/
+
+
+    //unbind VAO first and then the buffers
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void InstancedMesh::draw(Shader *shader)
 {
     //bind VAO and draw it
     glBindVertexArray(m_VAO);
-    glDrawElementsInstanced(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, nullptr, m_num_pos);
+    glDrawElementsInstanced(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, nullptr, m_num_inst);
     glBindVertexArray(0);
 }
 

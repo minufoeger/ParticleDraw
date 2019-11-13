@@ -6,11 +6,11 @@
 
 #include "framework.h"
 
-#define ARRAY_SIZE 500
+#define ARRAY_SIZE 3
 
 using namespace std;
 
-glm::vec3 g_array[ARRAY_SIZE*ARRAY_SIZE] = { glm::vec3(0.0f) };
+glm::vec3 g_array[ARRAY_SIZE*ARRAY_SIZE*2] = { glm::vec3(0.0f) };
 mutex g_posMutex;
 
 int main()
@@ -22,7 +22,8 @@ int main()
         for(int j=0; j<ARRAY_SIZE; ++j) {
             float x = (float)(-ARRAY_SIZE/2+j);
             float y = (float)(-ARRAY_SIZE/2+i);
-            g_array[i*ARRAY_SIZE+j] = glm::vec3(x, y, 0.0f);
+            g_array[2*(i*ARRAY_SIZE+j)] = glm::vec3(x, y, 0.0f);
+            g_array[2*(i*ARRAY_SIZE+j)+1] = glm::vec3(1.0f, 1.0f, 0.0f);
         }
     }
     for(int i=0; i<sizeof(g_array)/sizeof(g_array[0]); i++)
@@ -41,7 +42,7 @@ int main()
         cout << "Hello start: " << i << endl;
         //update positions
         g_posMutex.lock();
-        for (auto it = g_inst_positions.begin(); it != g_inst_positions.end(); ++it) {
+        for (auto it = g_inst_positions.begin(); it != g_inst_positions.end(); it+=2) {
             **it += glm::vec3(0.8f, 0.0f, 0.0f);
         }
         g_posMutex.unlock();
@@ -57,8 +58,8 @@ int main()
 
         //update positions
         g_posMutex.lock();
-        for (auto it = g_inst_positions.begin(); it != g_inst_positions.end(); ++it) {
-            **it -= glm::vec3(0.6f, 0.0f, 0.0f);
+        for (auto it = g_inst_positions.begin(); it != g_inst_positions.end(); it+=2) {
+            **it -= glm::vec3(0.8f, 0.0f, 0.0f);
         }
         g_posMutex.unlock();
 

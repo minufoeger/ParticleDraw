@@ -5,7 +5,8 @@
 #define CLEAR_COLOR_BLACK glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
 #define CLEAR_COLOR_BLACKISH glm::vec4(0.1f, 0.1f, 0.1f, 1.0f)
 
-Vertex g_vertices[] = {
+//static variables:
+static Vertex g_vertices[] = {
         // positions
         Vertex(glm::vec3(0.5f,  0.5f,  0.0f), glm::vec3(1.0f)), // top right
         Vertex(glm::vec3(0.5f, -0.5f,  0.0f), glm::vec3(1.0f)), // bottom right
@@ -18,7 +19,7 @@ Vertex g_vertices[] = {
         Vertex(glm::vec3(-0.5f, 0.5f, -1.0f), glm::vec3(1.0f))  // top left
 
 };
-unsigned int g_indices[] = {
+static unsigned int g_indices[] = {
         0, 1, 3,    1, 2, 3, //vorne
         4, 5, 7,    5, 6, 7, //hinten
         4, 5, 0,    5, 1, 0, //rechts
@@ -27,20 +28,12 @@ unsigned int g_indices[] = {
         2, 5, 6,    5, 1, 2  //unten
 };
 
-//static functions:
-static void printvector(const string &name, glm::vec3 vec)
-{
-    cout << "vector " << name << ": " << vec.x << ", " << vec.y << ", " << vec.z << endl;
-}
-
-//static variables:
 static float pitch = 0.0f, yaw = 0.0f;
-
 
 Framework::Framework(unsigned width, unsigned height, const string &title,
                      const std::string &vert_path, const std::string &frag_path,
                      const glm::vec3 &cam_pos,
-                     vector<glm::vec3*> *inst_positions)
+                     vector<glm::vec3*> *inst_attr)
 {
     //initialize the display (window, GLFW, ...)
     m_display = new Display(width, height, title);
@@ -62,7 +55,7 @@ Framework::Framework(unsigned width, unsigned height, const string &title,
     vector<unsigned> indices;
     for(int i=0; i<sizeof(g_indices)/sizeof(g_indices[0]); i++)
         indices.push_back(g_indices[i]);
-    m_cubes = new InstancedMesh(vertices, indices, inst_positions);
+    m_cubes = new InstancedMesh(vertices, indices, inst_attr);
 
     //cube transform:
     m_trans_cube = new Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
@@ -200,7 +193,7 @@ void Framework::thr_main_loop()
         thr_processInput();
 
         //Clear the screen
-        glm::vec4 clearColor = CLEAR_COLOR_BLACKISH;
+        glm::vec4 clearColor = CLEAR_COLOR_BLUE;
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
