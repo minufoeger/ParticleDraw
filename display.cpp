@@ -16,11 +16,9 @@ Display::Display(unsigned width, unsigned height, const string &title)
     //set glfw error callback
     glfwSetErrorCallback(error_callback);
 
-    //TODO: test what happens in Framework if this error occurs
     //init GLFW and create OpenGL window context
     if(initGLFW(width, height, title) != 0) {
-        cerr << "Failed to create window context" << endl;
-        return;
+        throw runtime_error("failed to create window context!");
     }
 }
 
