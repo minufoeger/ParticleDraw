@@ -110,7 +110,7 @@ bool Framework::getIsRunning()
 }
 
 
-void Framework::updateInstPos()
+void Framework::updateInstAttribs()
 {
     if(!this->getIsRunning())
         return;
@@ -182,7 +182,7 @@ void Framework::thr_main_loop()
         {
             std::unique_lock<std::mutex> ackLock(m_updateMutex);
             if (m_isUpdate) {
-                m_cubes->updateInstPos();
+                m_cubes->updateInstAttribs();
                 m_isUpdate = false;
                 m_ack_cv.notify_all();
             }

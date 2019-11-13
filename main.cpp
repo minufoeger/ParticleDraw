@@ -50,7 +50,7 @@ int main()
         //notify thread
         if(!fr.getIsRunning())
             break;
-        fr.updateInstPos();
+        fr.updateInstAttribs();
 
         //sleep some time
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -66,7 +66,7 @@ int main()
         //notify thread
         if(!fr.getIsRunning())
             break;
-        fr.updateInstPos();
+        fr.updateInstAttribs();
 
         //sleep some time
         std::this_thread::sleep_for(std::chrono::milliseconds(500));

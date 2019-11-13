@@ -30,7 +30,7 @@ public:
 
     void start_main_loop();
     void join();
-    void updateInstPos();
+    void updateInstAttribs();
     bool getIsRunning();
 
 private:

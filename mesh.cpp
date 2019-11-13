@@ -72,8 +72,11 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_attr->size(), nullptr, GL_STATIC_DRAW);
     //map buffer, copy everything into it and make sure to unmap after we're done
     glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_attr->size(); i++) {
-        *buf_ptr = *((*s_inst_attr)[i]);
+    for(int i=0; i<s_inst_attr->size()/2; i+=2) {
+        *buf_ptr = *((*s_inst_attr)[2*i]);
+        buf_ptr++;
+        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]));
+        *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -101,7 +104,7 @@ InstancedMesh::~InstancedMesh()
     glDeleteBuffers(1, &m_inst_VBO);
 }
 
-void InstancedMesh::updateInstPos()
+void InstancedMesh::updateInstAttribs()
 {
     //bind vertexArrayObject
     glBindVertexArray(m_VAO);
@@ -111,8 +114,11 @@ void InstancedMesh::updateInstPos()
 
     //map buffer, copy everything into it and make sure to unmap after we're done
     glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_attr->size(); i++) {
-        *buf_ptr = *(*s_inst_attr)[i];
+    for(int i=0; i<s_inst_attr->size()/2; i++) {
+        *buf_ptr = *((*s_inst_attr)[2*i]);
+        buf_ptr++;
+        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]));
+        *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
         buf_ptr++;
     }
     glUnmapBuffer(GL_ARRAY_BUFFER);

@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <mutex>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 #include <GL/glew.h>
 #include <vector>
 
@@ -56,7 +58,7 @@ public:
                   vector<glm::dvec3*> *inst_attr);
     ~InstancedMesh() override;
 
-    void updateInstPos();
+    void updateInstAttribs();
     void draw(Shader *shader) override;
 
 private:
