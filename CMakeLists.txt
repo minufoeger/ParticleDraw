@@ -25,9 +25,7 @@ target_include_directories(ParticleDraw
         ${GLEW_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIRS}
 )
-set_target_properties( PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/"
-)
+include_directories(${ParticleDraw_SOURCE_DIR}/)
 
 # target libraries
 target_link_libraries(ParticleDraw

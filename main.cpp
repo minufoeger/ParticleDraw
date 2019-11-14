@@ -4,7 +4,7 @@
 #include <mutex>
 #include <glm/glm.hpp>
 
-#include "framework.h"
+#include <framework.h>
 
 #define ARRAY_SIZE 3
 
