@@ -62,6 +62,8 @@ public:
     void draw(Shader *shader) override;
 
 private:
+    void copyToArrayBuffer();
+
     GLuint m_inst_VBO;
     vector<glm::dvec3*> *s_inst_attr;
     unsigned m_num_inst;

@@ -71,15 +71,7 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     //reserve space on GPU memory
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_attr->size(), nullptr, GL_STATIC_DRAW);
     //map buffer, copy everything into it and make sure to unmap after we're done
-    glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_attr->size()/2; i+=2) {
-        *buf_ptr = *((*s_inst_attr)[2*i]);
-        buf_ptr++;
-        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
-        *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
-        buf_ptr++;
-    }
-    glUnmapBuffer(GL_ARRAY_BUFFER);
+    copyToArrayBuffer();
 
     //bind attribArray 2 to instance positions
     glEnableVertexAttribArray(2);
@@ -113,15 +105,7 @@ void InstancedMesh::updateInstAttribs()
     glBindBuffer(GL_ARRAY_BUFFER, m_inst_VBO);
 
     //map buffer, copy everything into it and make sure to unmap after we're done
-    glm::vec3 *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<s_inst_attr->size()/2; i++) {
-        *buf_ptr = *((*s_inst_attr)[2*i]);
-        buf_ptr++;
-        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
-        *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
-        buf_ptr++;
-    }
-    glUnmapBuffer(GL_ARRAY_BUFFER);
+    copyToArrayBuffer();
 
     //unbind VAO first and then the buffers
     glBindVertexArray(0);
@@ -136,3 +120,18 @@ void InstancedMesh::draw(Shader *shader)
     glBindVertexArray(0);
 }
 
+
+
+void InstancedMesh::copyToArrayBuffer()
+{
+    //map buffer, copy everything into it and make sure to unmap after we're done
+    auto *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    for(int i=0; i<(int)(s_inst_attr->size()/2); i++) {
+        *buf_ptr = *((*s_inst_attr)[2*i]);
+        buf_ptr++;
+        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
+        *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
+        buf_ptr++;
+    }
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+}
