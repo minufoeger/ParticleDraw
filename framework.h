@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 
 #include "display.h"
-#include "mesh.h"
+#include "inst_mesh.h"
 #include "shader.h"
 #include "camera.h"
 #include "transform.h"

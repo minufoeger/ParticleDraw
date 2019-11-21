@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 
 
-add_library(ParticleDraw STATIC framework.cpp framework.h display.cpp display.h camera.cpp camera.h shader.cpp shader.h mesh.cpp mesh.h transform.cpp transform.h)
+add_library(ParticleDraw STATIC framework.cpp framework.h display.cpp display.h camera.cpp camera.h shader.cpp shader.h mesh.cpp mesh.h transform.cpp transform.h inst_mesh.cpp inst_mesh.h)
 
 # glew
 find_package(GLEW REQUIRED)
