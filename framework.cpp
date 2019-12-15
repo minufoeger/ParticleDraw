@@ -33,14 +33,14 @@ static float pitch = 0.0f, yaw = 0.0f;
 Framework::Framework(unsigned width, unsigned height, const string &title,
                      const std::string &vert_path, const std::string &frag_path,
                      const glm::vec3 &cam_pos,
-                     vector<glm::dvec3*> *inst_attr)
+                     vector<glm::dvec3*> inst_attr)
 {
     //initialize the display (window, GLFW, ...)
-    m_display = new Display(width, height, title);
+    m_display = std::make_unique<Display>(width, height, title);
 
     //create view and projection matrix (camera)
     glm::vec3 forward   = -glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f));
-    m_camera = new Camera(cam_pos, forward, glm::vec3(0.0f, 1.0f, 0.0f), //pos, forward, up
+    m_camera = std::make_unique<Camera>(cam_pos, forward, glm::vec3(0.0f, 1.0f, 0.0f), //pos, forward, up
                           PI/4.0f, ((float)width)/((float)height), //fov, aspect ratio
                           0.3f, 100.0f); //zNear, zFar
 
@@ -55,13 +55,13 @@ Framework::Framework(unsigned width, unsigned height, const string &title,
     vector<unsigned> indices;
     for(int i=0; i<sizeof(g_indices)/sizeof(g_indices[0]); i++)
         indices.push_back(g_indices[i]);
-    m_cubes = new InstancedMesh(vertices, indices, inst_attr);
+    m_cubes = std::make_unique<InstancedMesh>(vertices, indices, std::move(inst_attr));
 
     //cube transform:
-    m_trans_cube = new Transform(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    m_trans_cube = std::make_unique<Transform>(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 
     //cube shader:
-    m_shader_cube = new Shader(vert_path, frag_path);
+    m_shader_cube = std::make_unique<Shader>(vert_path, frag_path);
     m_shader_cube->setUniform4Matrix4fv("view_mat", m_camera->getView());
     m_shader_cube->setUniform4Matrix4fv("proj_mat", m_camera->getProjection());
     m_shader_cube->setUniform4Matrix4fv("model_mat", m_trans_cube->getModel());
@@ -77,18 +77,6 @@ Framework::Framework(unsigned width, unsigned height, const string &title,
 
 Framework::~Framework()
 {
-    //Transform
-    delete m_trans_cube;
-    //Mesh
-    delete m_cubes;
-    //Shader
-    delete m_shader_cube;
-
-    //Camera
-    delete m_camera;
-
-    //Display:
-    delete m_display;
 }
 
 
@@ -202,7 +190,7 @@ void Framework::thr_main_loop()
         m_shader_cube->setUniform4Matrix4fv("model_mat", m_trans_cube->getModel());
 
         //start pipeline with bound shaders
-        m_cubes->draw(m_shader_cube);
+        m_cubes->draw(m_shader_cube.get());
 
         //swap buffers
         m_display->swap();

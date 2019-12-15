@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <mutex>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>

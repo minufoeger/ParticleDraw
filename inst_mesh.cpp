@@ -1,9 +1,11 @@
 #include "inst_mesh.h"
 
-InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_inds, vector<glm::dvec3*> *inst_attr)
-        : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), s_inst_attr(inst_attr)
+InstancedMesh::InstancedMesh(
+        vector<Vertex> base_verts, vector<unsigned> base_inds,
+        vector<glm::dvec3*> inst_attr)
+        : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), m_inst_attr(std::move(inst_attr))
 {
-    m_num_inst = s_inst_attr->size()/2;
+    m_num_inst = m_inst_attr.size()/2;
 
     //bind vertexArrayObject
     glBindVertexArray(m_VAO);
@@ -12,7 +14,7 @@ InstancedMesh::InstancedMesh(vector<Vertex> base_verts, vector<unsigned> base_in
     glGenBuffers(1, &m_inst_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_inst_VBO);
     //reserve space on GPU memory
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * s_inst_attr->size(), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * m_inst_attr.size(), nullptr, GL_STATIC_DRAW);
     //map buffer, copy everything into it and make sure to unmap after we're done
     copyToArrayBuffer();
 
@@ -69,10 +71,10 @@ void InstancedMesh::copyToArrayBuffer()
 {
     //map buffer, copy everything into it and make sure to unmap after we're done
     auto *buf_ptr = (glm::vec3 *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    for(int i=0; i<(int)(s_inst_attr->size()/2); i++) {
-        *buf_ptr = *((*s_inst_attr)[2*i]);
+    for(int i=0; i<(int)(m_inst_attr.size()/2); i++) {
+        *buf_ptr = *(m_inst_attr[2*i]);
         buf_ptr++;
-        double norm = glm::l2Norm(*((*s_inst_attr)[2*i+1]))/10.0f;
+        double norm = glm::l2Norm(*(m_inst_attr[2*i+1]))/10.0f;
         *buf_ptr = glm::vec3((float)norm, 0.0f, 0.0f);
         buf_ptr++;
     }

@@ -24,7 +24,7 @@ public:
     Framework(unsigned width, unsigned height, const string &title,
               const std::string &vert_path, const std::string &frag_path,
               const glm::vec3 &cam_pos,
-              vector<glm::dvec3*> *inst_attr);
+              vector<glm::dvec3*> inst_attr);
     ~Framework();
 
 
@@ -50,10 +50,10 @@ private:
     condition_variable m_ack_cv;
 
 
-    Display *m_display;
-    Camera *m_camera;
+    std::unique_ptr<Display> m_display;
+    std::unique_ptr<Camera> m_camera;
 
-    InstancedMesh *m_cubes;
-    Shader *m_shader_cube;
-    Transform *m_trans_cube;
+    std::unique_ptr<InstancedMesh> m_cubes;
+    std::unique_ptr<Shader> m_shader_cube;
+    std::unique_ptr<Transform> m_trans_cube;
 };
