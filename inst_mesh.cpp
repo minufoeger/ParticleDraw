@@ -2,7 +2,7 @@
 
 InstancedMesh::InstancedMesh(
         vector<Vertex> base_verts, vector<unsigned> base_inds,
-        vector<glm::dvec3*> inst_attr)
+        vector<const glm::dvec3 *> inst_attr)
         : Mesh::Mesh(std::move(base_verts), std::move(base_inds)), m_inst_attr(std::move(inst_attr))
 {
     m_num_inst = m_inst_attr.size()/2;
